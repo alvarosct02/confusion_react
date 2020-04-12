@@ -21,18 +21,22 @@ class DishDetail extends Component {
 
     renderComments() {
 
+        if (this.props.dish.comments == null) return <div></div>
+
         const comments = this.props.dish.comments.map((comment) => {
             return (
                 <div>
-                    <p>{comment.comment}</p>
-                    <p>-- {comment.author}, {comment.date} </p>
+                    <dd>{comment.comment}</dd>
+                    <dd>-- {comment.author}, {comment.date} </dd>
                 </div>
             );
         });
-        
+
         return <div className="col-12 col-md-5 m-1">
-            <h3>Comments </h3>
-            {comments}
+            <h4>Comments </h4>
+            <ul className="list-unstyled">
+                {comments}
+            </ul>
         </div>
     }
 
