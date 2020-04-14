@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Control, Errors, LocalForm } from 'react-redux-form';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, BreadcrumbItem, Button, Card, CardBody, CardImg, CardText, CardTitle, Col, Label, Modal, ModalBody, ModalHeader, Row } from 'reactstrap';
+import { Breadcrumb, BreadcrumbItem, Button, Card, CardBody, CardImg, CardText, CardTitle, Label, Modal, ModalBody, ModalHeader, Row } from 'reactstrap';
+import { Loading } from './LoadingComponent';
 
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
 const minLength = (len) => (val) => val && (val.length >= len);
@@ -37,34 +38,52 @@ function RenderComments({ comments, addComment, dishId }) {
         <ul className="list-unstyled">
             {commentsView}
         </ul>
-        <CommentForm dishId={dishId} addComment={addComment}/>
+        <CommentForm dishId={dishId} addComment={addComment} />
     </div>
 }
 
 const DishDetail = (props) => {
     console.log(props);
 
-    if (props.dish == null) return <div></div>
+    if (props.isLoading) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <Loading />
+                </div>
+            </div>
+        );
+    } else if (props.errMess) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <h4>{props.errMess}</h4>
+                </div>
+            </div>
+        );
+    } else if (props.dish != null) {
+        return <div className="container">
+            <div className="row">
+                <Breadcrumb>
 
-    return <div className="container">
-        <div className="row">
-            <Breadcrumb>
-
-                <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
-                <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
-            </Breadcrumb>
-            <div className="col-12">
-                <h3>{props.dish.name}</h3>
-                <hr />
+                    <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
+                    <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+                </Breadcrumb>
+                <div className="col-12">
+                    <h3>{props.dish.name}</h3>
+                    <hr />
+                </div>
+            </div>
+            <div className="row">
+                <RenderDish dish={props.dish} />
+                <RenderComments comments={props.comments}
+                    addComment={props.addComment}
+                    dishId={props.dish.id} />
             </div>
         </div>
-        <div className="row">
-            <RenderDish dish={props.dish} />
-            <RenderComments comments={props.comments}
-            addComment={props.addComment}
-            dishId={props.dish.id} />
-        </div>
-    </div>
+    } else {
+        return <div></div>
+    }
 }
 export default DishDetail;
 
@@ -137,8 +156,8 @@ class CommentForm extends Component {
                                     className="form-control" />
                             </Row>
                             <Row className="form-group m-1">
-                                    <Button type="submit" color="primary">
-                                        Submit
+                                <Button type="submit" color="primary">
+                                    Submit
                                     </Button>
                             </Row>
                         </LocalForm>
