@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardImg, CardText, CardTitle } from 'reactstrap';
-
+import { Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 function RenderDish({ dish }) {
     return <div className="col-12 col-md-5 m-1">
@@ -34,6 +34,7 @@ function RenderComments({ comments }) {
         <ul className="list-unstyled">
             {commentsView}
         </ul>
+        <Comment/>
     </div>
 }
 
@@ -59,3 +60,36 @@ const DishDetail = (props) => {
     </div>
 }
 export default DishDetail;
+
+
+class Comment extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isModalOpen: false
+        };
+        this.toggleModal = this.toggleModal.bind(this);
+
+    }
+
+    toggleModal() {
+        this.setState({
+            isModalOpen: !this.state.isModalOpen
+        });
+    }
+
+    render() {
+        return (
+            <div>
+                <Button outline onClick={this.toggleModal}><span className="fa fa-pencil fa-lg"></span> Submit Comment</Button>
+
+                <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+                    <ModalHeader toggle={this.toggleModal}>Comment</ModalHeader>
+                    <ModalBody>
+                    </ModalBody>
+                </Modal>
+            </div>
+        );
+    }
+}
